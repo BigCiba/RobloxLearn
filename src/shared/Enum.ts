@@ -1,0 +1,12 @@
+export enum ABILITY_BEHAVIOR {
+	NONE = 0,
+	HIDDEN = 1,
+	PASSIVE = 2,
+	NO_TARGET = 4,
+	UNIT_TARGET = 8,
+	POINT = 16,
+}
+export enum ABILITY_PROPERTY {
+	MOVE_SPEED,
+	JUMP_HEIGHT,
+}
