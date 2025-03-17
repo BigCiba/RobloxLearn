@@ -1,29 +1,36 @@
-import { AbilityKeyValue } from "shared/Declare/common";
 import { ABILITY_PROPERTY } from "shared/Enum";
 import { GameData } from "shared/Module/GameData";
+import { CBaseUnit } from "./CBaseUnit";
+import { AbilityKeyValue } from "types/Common";
 
 export class CBaseAbility {
-	private __caster: Humanoid;
+	private __caster: CBaseUnit;
 	private __abilityName: string;
 	private __abilityData: AbilityKeyValue;
-	constructor(caster: Humanoid, abilityName: string) {
+	constructor(caster: CBaseUnit, abilityName: string) {
 		this.__caster = caster;
 		this.__abilityName = abilityName;
 		this.__abilityData = GameData.Item[abilityName];
-		const declareProperty = this.DeclareProperty();
-		for (const [key, value] of pairs(declareProperty)) {
-			const oldValue = (this.__caster.GetAttribute("DeclareProperty" + key) ?? 0) as number;
-			this.__caster.SetAttribute("DeclareProperty" + key, oldValue + value);
-		}
+		this.registerDeclareProperty();
 		this.OnCreated();
 	}
 	dispose() {
+		this.unRegisterDeclareProperty();
+		this.OnDestroy();
+	}
+	protected registerDeclareProperty() {
 		const declareProperty = this.DeclareProperty();
 		for (const [key, value] of pairs(declareProperty)) {
-			const oldValue = (this.__caster.GetAttribute("DeclareProperty" + key) ?? 0) as number;
-			this.__caster.SetAttribute("DeclareProperty" + key, oldValue - value);
+			const oldValue = (this.__caster.GetHumanoid().GetAttribute("DeclareProperty" + key) ?? 0) as number;
+			this.__caster.GetHumanoid().SetAttribute("DeclareProperty" + key, oldValue + value);
 		}
-		this.OnDestroy();
+	}
+	protected unRegisterDeclareProperty() {
+		const declareProperty = this.DeclareProperty();
+		for (const [key, value] of pairs(declareProperty)) {
+			const oldValue = (this.__caster.GetHumanoid().GetAttribute("DeclareProperty" + key) ?? 0) as number;
+			this.__caster.GetHumanoid().SetAttribute("DeclareProperty" + key, oldValue + value);
+		}
 	}
 	OnCreated() { }
 	OnDestroy() { }

@@ -1,5 +1,7 @@
-import { ABILITY_PROPERTY } from "shared/Enum";
+import { ABILITY_PROPERTY, INVENTORY_SLOT } from "shared/Enum";
 import { AddAbility, AddItem } from "shared/Lua/CommonLua";
+import { CBaseItem } from "./CBaseItem";
+import { CBaseAbility } from "./CBaseAbility";
 
 export class CBaseUnit {
 	private __humanoid: Humanoid;
@@ -7,6 +9,8 @@ export class CBaseUnit {
 	private __maxHealth: number = 1000;
 	private __moveSpeed: number = 22;
 	private __jumpHeight: number = 7.2;
+	private __abilityList: Record<number, CBaseAbility> = {};
+	private __inventoryList: Record<number, CBaseItem> = {};
 	private AttributeChanged: RBXScriptConnection;
 	constructor(humanoid: Humanoid) {
 		this.__humanoid = humanoid;
@@ -27,10 +31,25 @@ export class CBaseUnit {
 		print("CBaseUnit dispose");
 	}
 	AddAbility(abilityName: string) {
-		AddAbility(this.__humanoid, abilityName);
+		const ability = AddAbility(this, abilityName);
+		return ability;
 	}
 	AddItemByName(itemName: string) {
-		return AddItem(this.__humanoid, itemName);
+		let emptySlot;
+		for (let slot = INVENTORY_SLOT.SLOT_1; slot < INVENTORY_SLOT.SLOT_0; slot++) {
+			if (this.__inventoryList[slot] === undefined) {
+				emptySlot = slot;
+				break;
+			}
+		}
+		if (emptySlot) {
+			const item = AddItem(this, itemName);
+			this.__inventoryList[emptySlot] = item;
+			return item;
+		}
+	}
+	GetHumanoid() {
+		return this.__humanoid;
 	}
 	GetHealth() {
 		return this.__health;
@@ -43,6 +62,12 @@ export class CBaseUnit {
 	}
 	GetJumpHeight() {
 		return this.__jumpHeight;
+	}
+	GetPosition() {
+		return new Vector3(0, 0, 10);
+	}
+	GetItemInSlot(slot: INVENTORY_SLOT) {
+		return this.__inventoryList[slot];
 	}
 	Kill() {
 		this.__humanoid.Health = 0;

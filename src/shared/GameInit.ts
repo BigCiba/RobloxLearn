@@ -2,7 +2,6 @@ import { Players, RunService } from "@rbxts/services";
 import { CBaseUnit } from "./Class/CBaseUnit";
 import { GameData } from "./Module/GameData";
 
-
 export function GameInit() {
 	if (RunService.IsServer()) {
 		print("GameInit Server");
@@ -19,9 +18,9 @@ if (RunService.IsServer()) {
 			if (humanoid) {
 				const unit = new CBaseUnit(humanoid);
 				playerList[player.UserId] = unit;
-				unit.AddItemByName("Spring");
+				// unit.AddItemByName("Spring");
 				const zhuzhu = unit.AddItemByName("ZhuZhu");
-				zhuzhu.OnSpellStart();
+				zhuzhu?.OnSpellStart();
 			}
 		});
 	});

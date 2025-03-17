@@ -1,7 +1,7 @@
-import { AbilityKeyValue } from "shared/Declare/common";
+import { AbilityKeyValue } from "types/Common";
 import { ABILITY_BEHAVIOR } from "shared/Enum";
 
-export const ItemData:Record<string,Partial<AbilityKeyValue>> = {
+export const ItemData: Record<string, Partial<AbilityKeyValue>> = {
 	Axe: {
 		Behavior: ABILITY_BEHAVIOR.PASSIVE,
 		CastPoint: 0.5,
@@ -23,4 +23,4 @@ export const ItemData:Record<string,Partial<AbilityKeyValue>> = {
 			count: 1,
 		},
 	},
-}
+};
