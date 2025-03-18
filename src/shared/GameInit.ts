@@ -28,4 +28,4 @@ if (RunService.IsServer()) {
 		playerList[player.UserId].dispose();
 		delete playerList[player.UserId];
 	});
-} 
+}

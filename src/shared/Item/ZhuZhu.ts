@@ -1,4 +1,4 @@
-import { ServerStorage, Workspace } from "@rbxts/services";
+import { ServerStorage, Workspace, RunService } from "@rbxts/services";
 import { CBaseItem } from "shared/Class/CBaseItem";
 
 export class ZhuZhu extends CBaseItem {

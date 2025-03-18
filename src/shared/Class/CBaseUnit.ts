@@ -42,7 +42,7 @@ export class CBaseUnit {
 				break;
 			}
 		}
-		if (emptySlot) {
+		if (emptySlot !== undefined) {
 			const item = AddItem(this, itemName);
 			this.__inventoryList[emptySlot] = item;
 			return item;
