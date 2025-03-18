@@ -1,9 +1,8 @@
-import { Players, UserInputService } from "@rbxts/services";
+import { StarterGui, UserInputService } from "@rbxts/services";
 
 print("invertory Client");
-const invertory = Players.WaitForChild("PlayerGui").WaitForChild("ScreenGui").WaitForChild("Inventory") as StarterGui["ScreenGui"]["Inventory"];
-const prefabSlot = invertory.WaitForChild("PrefabSlot") as StarterGui["ScreenGui"]["Inventory"]["PrefabSlot"];
-print(prefabSlot);
+const invertory = StarterGui.ScreenGui.Inventory;
+const prefabSlot = invertory.PrefabSlot;
 prefabSlot.Name = "Slot48";
 prefabSlot.Activated.Connect(() => {
 	OnActive(prefabSlot);
