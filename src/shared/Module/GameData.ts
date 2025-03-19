@@ -11,7 +11,7 @@ export class GameData {
 		Cooldown: 0,
 		Values: {},
 	};
-	static Init() {
+	static Initialize() {
 		for (const [abilityName, v] of pairs(ItemData)) {
 			this.Item[abilityName] = { ...this.ItemBase, ...v };
 		}

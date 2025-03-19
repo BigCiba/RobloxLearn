@@ -20,6 +20,8 @@
     "prettier": "^3.5.3",
     "roblox-ts": "^3.0.0",
     "typescript": "^5.8.2",
-    "@rbxts/services": "^1.5.5"
+    "@rbxts/services": "^1.5.5",
+    "@rbxts/react": "17.2.3",
+    "@rbxts/react-roblox": "17.2.3"
   }
 }

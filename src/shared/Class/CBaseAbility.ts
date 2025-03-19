@@ -62,7 +62,7 @@ export class CBaseAbility {
 		return 0;
 	}
 	GetSpecialValueFor(name: string) {
-		return this.__abilityData.Values[name];
+		return this.__abilityData?.Values?.[name] ?? 0;
 	}
 	OnSpellStart() { }
 	DeclareProperty(): Partial<Record<ABILITY_PROPERTY, number>> {
