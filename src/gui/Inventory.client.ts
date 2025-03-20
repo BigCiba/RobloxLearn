@@ -6,7 +6,6 @@ prefabSlot.Name = "Slot48";
 prefabSlot.Activated.Connect(() => {
 	OnActive(prefabSlot);
 });
-
 // 当前槽位
 let currentSlot: typeof prefabSlot;
 // 存背包组件方便后续使用
@@ -15,6 +14,7 @@ let slotTable: Record<number, typeof prefabSlot> = { [Enum.KeyCode.Zero.Value]: 
 function OnActive(slot: typeof prefabSlot) {
 	if (currentSlot === slot) {
 		// 卸下
+		// FireEvent("inventory_change", {slot});
 	} else {
 		for (const [k, v] of pairs(slotTable)) {
 			v.UIStroke.Thickness = 0;
@@ -30,7 +30,6 @@ for (let i = 1; i < 9; i++) {
 	slot.LayoutOrder = i;
 	slot.HotKey.Text = tostring(i);
 	slot.Name = "Slot" + (i + 48);
-	print(slot);
 	slotTable[Enum.KeyCode.Zero.Value + i] = slot;
 	slot.Activated.Connect(() => {
 		OnActive(slot);
