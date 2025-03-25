@@ -1,5 +1,6 @@
 import { ServerStorage, Workspace, RunService } from "@rbxts/services";
 import { CBaseItem } from "shared/Class/CBaseItem";
+import { EventManager } from "shared/Module/EventManager";
 
 export class ZhuZhu extends CBaseItem {
 	OnSpellStart(): void {

@@ -1,4 +1,5 @@
 import { UserInputService } from "@rbxts/services";
+import { EventManager } from "shared/Module/EventManager";
 
 let startGui = script.Parent?.Parent as StarterGui;
 const prefabSlot = startGui.ScreenGui.Inventory.PrefabSlot;
@@ -12,6 +13,7 @@ let currentSlot: typeof prefabSlot;
 let slotTable: Record<number, typeof prefabSlot> = { [Enum.KeyCode.Zero.Value]: prefabSlot };
 
 function OnActive(slot: typeof prefabSlot) {
+	EventManager.FireServer("OnUseItem", { slot: slot.LayoutOrder });
 	if (currentSlot === slot) {
 		// 卸下
 		// FireEvent("inventory_change", {slot});
