@@ -1,7 +1,8 @@
 import { ABILITY_PROPERTY, INVENTORY_SLOT } from "shared/Enum";
 import { AddAbility, AddItem } from "shared/Lua/CommonLua";
-import { CBaseItem } from "./CBaseItem";
+import { EventManager } from "shared/Module/EventManager";
 import { CBaseAbility } from "./CBaseAbility";
+import { CBaseItem } from "./CBaseItem";
 
 export class CBaseUnit {
 	private __humanoid: Humanoid;
@@ -28,6 +29,10 @@ export class CBaseUnit {
 	}
 	dispose() {
 		this.AttributeChanged.Disconnect();
+		for (const [k, v] of pairs(this.__inventoryList)) {
+			v.dispose();
+		}
+		this.__inventoryList = {};
 		print("CBaseUnit dispose");
 	}
 	AddAbility(abilityName: string) {
@@ -45,6 +50,7 @@ export class CBaseUnit {
 		if (emptySlot !== undefined) {
 			const item = AddItem(this, itemName);
 			this.__inventoryList[emptySlot] = item;
+			EventManager.FireClient("OnInventoryChange", { slot: emptySlot, itemName: itemName });
 			return item;
 		}
 	}

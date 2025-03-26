@@ -1,5 +1,6 @@
 import { UserInputService } from "@rbxts/services";
 import { EventManager } from "shared/Module/EventManager";
+import { GameData } from "shared/Module/GameData";
 
 let startGui = script.Parent?.Parent as StarterGui;
 const prefabSlot = startGui.ScreenGui.Inventory.PrefabSlot;
@@ -49,6 +50,12 @@ UserInputService.InputBegan.Connect((input) => {
 });
 
 // 临时代码，添加一个猪猪道具
-slotTable[Enum.KeyCode.One.Value].Image = "rbxassetid://133804548680200";
-slotTable[Enum.KeyCode.Two.Value].Image = "rbxassetid://11068929649";
-slotTable[Enum.KeyCode.Three.Value].Image = "rbxassetid://12298739827";
+// slotTable[Enum.KeyCode.One.Value].Image = "rbxassetid://133804548680200";
+// slotTable[Enum.KeyCode.Two.Value].Image = "rbxassetid://11068929649";
+// slotTable[Enum.KeyCode.Three.Value].Image = "rbxassetid://12298739827";
+
+EventManager.RegisterClientEvent("OnInventoryChange", (data) => {
+	const slot = slotTable[Enum.KeyCode.Zero.Value + data.slot];
+	const itemData = GameData.GetItemData(data.itemName);
+	slot.Image = itemData.Texture;
+});

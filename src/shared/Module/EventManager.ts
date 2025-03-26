@@ -2,6 +2,7 @@ import { ReplicatedStorage, RunService } from "@rbxts/services";
 
 interface EventCallback {
 	OnUseItem: { slot: number; };
+	OnInventoryChange: { slot: number; itemName: string; };
 }
 
 // BindableEvent是异步不需要回调的事件，可以绑定多个事件
@@ -21,22 +22,35 @@ export class EventManager {
 			this.EventContainer[eventName] = ReplicatedStorage.WaitForChild(eventName) as CreatableInstances[T];
 		}
 	}
-	/** 注册客户端发过来的事件 */
-	static RegisterEvent<T extends keyof EventCallback>(eventName: T, callback: (player: Player, data: EventCallback[T]) => void) {
-		const event = EventManager.GetEvent(eventName);
+	/** 服务器注册客户端发过来的事件 */
+	static RegisterServerEvent<T extends keyof EventCallback>(eventName: T, callback: (player: Player, data: EventCallback[T]) => void) {
 		if (RunService.IsServer()) {
+			const event = EventManager.GetEvent(eventName);
 			if (event.ClassName === "RemoteEvent") {
 				(event as RemoteEvent).OnServerEvent.Connect(callback as (player: Player, ...args: Array<unknown>) => void);
 			} else if (event.ClassName === "RemoteFunction") {
 				(event as RemoteFunction).OnServerInvoke = callback as (player: Player, ...args: Array<unknown>) => void;
 			}
 		}
+	}
+	/** 客户端注册服务器发过来的事件 */
+	static RegisterClientEvent<T extends keyof EventCallback>(eventName: T, callback: (data: EventCallback[T]) => void) {
 		if (RunService.IsClient()) {
-			// if (event.ClassName === "RemoteEvent") {
-			// 	(event as RemoteEvent).OnClientEvent.Connect(callback);
-			// } else if (event.ClassName === "RemoteFunction") {
-			// 	(event as RemoteFunction).OnClientInvoke = callback;
-			// }
+			const event = EventManager.GetEvent(eventName);
+			if (event.ClassName === "RemoteEvent") {
+				(event as RemoteEvent).OnClientEvent.Connect(callback as (...args: Array<unknown>) => void);
+			} else if (event.ClassName === "RemoteFunction") {
+				(event as RemoteFunction).OnClientInvoke = callback as (...args: Array<unknown>) => void;
+			}
+		}
+	}
+	/** 双端同端互传 */
+	static BindEvent<T extends keyof EventCallback>(eventName: T, callback: (data: EventCallback[T]) => void) {
+		const event = EventManager.GetEvent(eventName);
+		if (event.ClassName === "BindableEvent") {
+			(event as BindableEvent).Event.Connect(callback as (...args: Array<unknown>) => void);
+		} else if (event.ClassName === "BindableFunction") {
+			(event as BindableFunction).OnInvoke = callback as (...args: Array<unknown>) => void;
 		}
 	}
 	static GetEvent<T extends keyof CreatableInstances>(eventName: string): CreatableInstances[T] {
