@@ -1,10 +1,19 @@
 import { CBaseAbility } from "./CBaseAbility";
 
 export class CBaseItem extends CBaseAbility {
-	OnEquip() {
-		this.registerDeclareProperty();
+	private __isEquip: boolean = false;
+	Equip() {
+		print("Equip", this.GetAbilityName());
+		if (!this.__isEquip) {
+			this.__isEquip = true;
+			this.registerDeclareProperty();
+		}
 	}
-	OnUnequip() {
-		this.unRegisterDeclareProperty();
+	Unequip() {
+		print("Unequip", this.GetAbilityName());
+		if (this.__isEquip) {
+			this.__isEquip = false;
+			this.unRegisterDeclareProperty();
+		}
 	}
 }

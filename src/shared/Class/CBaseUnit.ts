@@ -5,6 +5,7 @@ import { CBaseAbility } from "./CBaseAbility";
 import { CBaseItem } from "./CBaseItem";
 
 export class CBaseUnit {
+	private __player: Player;
 	private __humanoid: Humanoid;
 	private __health: number = 1000;
 	private __maxHealth: number = 1000;
@@ -13,7 +14,8 @@ export class CBaseUnit {
 	private __abilityList: Record<number, CBaseAbility> = {};
 	private __inventoryList: Record<number, CBaseItem> = {};
 	private AttributeChanged: RBXScriptConnection;
-	constructor(humanoid: Humanoid) {
+	constructor(player: Player, humanoid: Humanoid) {
+		this.__player = player;
 		this.__humanoid = humanoid;
 		print("CBaseUnit constructor");
 		this.AttributeChanged = this.__humanoid.AttributeChanged.Connect((attribute) => {
@@ -24,6 +26,14 @@ export class CBaseUnit {
 				} else if (property === ABILITY_PROPERTY.MOVE_SPEED) {
 					this.__humanoid.WalkSpeed = this.__moveSpeed + (this.__humanoid.GetAttribute(attribute) as number);
 				}
+			}
+		});
+		EventManager.RegisterServerEvent("OnEquipStateChange", (player, data) => {
+			if (player === this.__player) {
+				for (const [k, v] of pairs(this.__inventoryList)) {
+					v.Unequip();
+				}
+				this.__inventoryList[data.slot].Equip();
 			}
 		});
 	}
@@ -50,7 +60,8 @@ export class CBaseUnit {
 		if (emptySlot !== undefined) {
 			const item = AddItem(this, itemName);
 			this.__inventoryList[emptySlot] = item;
-			EventManager.FireClient("OnInventoryChange", { slot: emptySlot, itemName: itemName });
+			print("AddItemByName", itemName, emptySlot);
+			EventManager.FireClient(this.__player, "OnInventoryChange", { slot: emptySlot, itemName: itemName });
 			return item;
 		}
 	}

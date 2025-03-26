@@ -9,7 +9,7 @@ Players.PlayerAdded.Connect((player) => {
 	player.CharacterAdded.Connect((character) => {
 		const humanoid = character.WaitForChild("Humanoid") as Humanoid;
 		if (humanoid) {
-			const unit = new CBaseUnit(humanoid);
+			const unit = new CBaseUnit(player, humanoid);
 			playerList[player.UserId] = unit;
 			// unit.AddItemByName("Spring");
 			unit.AddItemByName("ZhuZhu");

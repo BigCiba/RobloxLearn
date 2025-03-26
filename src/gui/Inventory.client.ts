@@ -14,16 +14,17 @@ let currentSlot: typeof prefabSlot;
 let slotTable: Record<number, typeof prefabSlot> = { [Enum.KeyCode.Zero.Value]: prefabSlot };
 
 function OnActive(slot: typeof prefabSlot) {
-	EventManager.FireServer("OnUseItem", { slot: slot.LayoutOrder });
 	if (currentSlot === slot) {
 		// 卸下
 		// FireEvent("inventory_change", {slot});
+		EventManager.FireServer("OnUseItem", { slot: slot.LayoutOrder });
 	} else {
 		for (const [k, v] of pairs(slotTable)) {
 			v.UIStroke.Thickness = 0;
 		}
 		currentSlot = slot;
 		currentSlot.UIStroke.Thickness = 4;
+		EventManager.FireServer("OnEquipStateChange", { slot: slot.LayoutOrder, itemName: slot.Name, state: true });
 	}
 }
 
@@ -55,7 +56,7 @@ UserInputService.InputBegan.Connect((input) => {
 // slotTable[Enum.KeyCode.Three.Value].Image = "rbxassetid://12298739827";
 
 EventManager.RegisterClientEvent("OnInventoryChange", (data) => {
-	const slot = slotTable[Enum.KeyCode.Zero.Value + data.slot];
+	const slot = slotTable[Enum.KeyCode.One.Value + data.slot];
 	const itemData = GameData.GetItemData(data.itemName);
 	slot.Image = itemData.Texture;
 });

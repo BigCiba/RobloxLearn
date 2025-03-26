@@ -3,6 +3,7 @@ import { ReplicatedStorage, RunService } from "@rbxts/services";
 interface EventCallback {
 	OnUseItem: { slot: number; };
 	OnInventoryChange: { slot: number; itemName: string; };
+	OnEquipStateChange: { slot: number; itemName: string; state: boolean; };
 }
 
 // BindableEvent是异步不需要回调的事件，可以绑定多个事件
@@ -11,6 +12,8 @@ export class EventManager {
 	static EventContainer: Record<string, Instance> = {};
 	static Initialize() {
 		this.InitializeEvent("OnUseItem", "RemoteEvent");
+		this.InitializeEvent("OnInventoryChange", "RemoteEvent");
+		this.InitializeEvent("OnEquipStateChange", "RemoteEvent");
 	}
 	static InitializeEvent<T extends keyof CreatableInstances>(eventName: string, instanceType: T) {
 		if (RunService.IsServer()) {
@@ -76,8 +79,8 @@ export class EventManager {
 		EventManager.GetEvent<"RemoteEvent">(eventName).FireServer(eventData);
 	}
 	/** 发送远程事件（服务器到客户端） */
-	static FireClient<K extends keyof EventCallback>(eventName: K, eventData: EventCallback[K]) {
-		// EventManager.GetEvent<"RemoteEvent">(eventName).FireClient(eventData);
+	static FireClient<K extends keyof EventCallback>(player: Player, eventName: K, eventData: EventCallback[K]) {
+		EventManager.GetEvent<"RemoteEvent">(eventName).FireClient(player, eventData);
 	}
 	/** 发送远程事件（客户端到服务器） */
 	static FireAllClients<K extends keyof EventCallback>(eventName: K, eventData: EventCallback[K]) {
