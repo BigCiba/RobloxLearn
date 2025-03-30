@@ -68,6 +68,9 @@ export class CBaseUnit {
 	GetHumanoid() {
 		return this.__humanoid;
 	}
+	GetPlayer() {
+		return this.__player;
+	}
 	GetHealth() {
 		return this.__health;
 	}

@@ -13,6 +13,7 @@ Players.PlayerAdded.Connect((player) => {
 			playerList[player.UserId] = unit;
 			// unit.AddItemByName("Spring");
 			unit.AddItemByName("ZhuZhu");
+			unit.AddItemByName("Dai");
 			unit.AddItemByName("Axe");
 			unit.AddItemByName("Spring");
 		}
