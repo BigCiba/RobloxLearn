@@ -23,9 +23,3 @@ Players.PlayerRemoving.Connect((player) => {
 	playerList[player.UserId].dispose();
 	delete playerList[player.UserId];
 });
-
-// EventManager.RegisterServerEvent("OnUseItem", (player, data) => {
-// 	for (const [k, v] of pairs(data)) {
-// 		print(player, k, v);
-// 	}
-// });

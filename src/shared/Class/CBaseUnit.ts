@@ -36,6 +36,9 @@ export class CBaseUnit {
 				this.__inventoryList[data.slot].Equip();
 			}
 		});
+		EventManager.RegisterServerEvent("OnUseItem", (player, data) => {
+			this.__inventoryList[data.slot].OnSpellStart();
+		});
 	}
 	dispose() {
 		this.AttributeChanged.Disconnect();
@@ -84,7 +87,25 @@ export class CBaseUnit {
 		return this.__jumpHeight;
 	}
 	GetPosition() {
-		return new Vector3(0, 0, 10);
+		return this.__humanoid.RootPart?.Position ?? new Vector3(0, 0, 0);
+	}
+	GetOrientation() {
+		return this.__humanoid.RootPart?.Orientation ?? new Vector3(0, 0, 0);
+	}
+	GetPivot() {
+		return this.__humanoid.RootPart?.GetPivot() ?? new CFrame(0, 0, 0);
+	}
+	/** 平面2D向量 */
+	GetForwardVector() {
+		const Orientation = this.__humanoid.RootPart?.Orientation;
+		if (Orientation === undefined) return new Vector3(0, 1, 0);
+		// 提取绕 Y 轴的旋转角度
+		const theta = Orientation.Y * (math.pi / 180); // 将角度转换为弧度
+		// 计算方向单位向量
+		const x = -math.sin(theta);
+		const y = 0; // 绕 Y 轴旋转不会改变 Y 分量
+		const z = -math.cos(theta);
+		return new Vector3(x, y, z);
 	}
 	GetItemInSlot(slot: INVENTORY_SLOT) {
 		return this.__inventoryList[slot];

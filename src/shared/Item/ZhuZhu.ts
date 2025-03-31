@@ -7,10 +7,10 @@ export class ZhuZhu extends CBaseItem {
 		const caster = this.GetCaster();
 		const count = this.GetSpecialValueFor("count");
 		for (let i = 0; i < count; i++) {
-			const pig = ServerStorage.WaitForChild("Model").WaitForChild("Pig") as MeshPart;
+			const pig = ServerStorage.WaitForChild("Model").WaitForChild("pig") as Model;
 			const newZhuZhu = pig.Clone(); // 克隆一个猪猪
 			newZhuZhu.Parent = Workspace;
-			newZhuZhu.Position = caster.GetPosition();
+			newZhuZhu.PivotTo(caster.GetPivot().mul(new CFrame(0, 0, -15)));
 		}
 	}
 }
